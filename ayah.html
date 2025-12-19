@@ -21,11 +21,12 @@
   :root {
     --bg: #0f1115;
     --text: #ffffff;
-    --sub: #ccc;
+    --sub: #cccccc;
     --border: #333;
   }
 }
 
+/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -38,12 +39,13 @@ html, body {
   overflow: hidden;
 }
 
-/* Container */
+/* CONTAINER */
 .container {
-  padding: 12px 14px;
+  padding: 10px 12px;
+  display: block;
 }
 
-/* Controls */
+/* TOGGLES */
 .controls {
   display: flex;
   gap: 6px;
@@ -52,7 +54,7 @@ html, body {
 
 .controls button {
   font-size: 11px;
-  padding: 4px 8px;
+  padding: 3px 8px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--sub);
@@ -60,34 +62,35 @@ html, body {
   cursor: pointer;
 }
 
-/* Arabic */
+/* ARABIC */
 .arabic {
   font-family: 'Amiri', serif;
   font-size: 30px;
-  line-height: 2;
+  line-height: 1.7;
   direction: rtl;
   text-align: right;
+  margin-bottom: 4px;
 }
 
-/* Tajweed colors */
-.madd { color: #008000; }
+/* TAJWEED COLORS (basic) */
+.madd { color: #00a000; }
 .ghunna { color: #c000c0; }
-.qalqalah { color: #0066cc; }
+.qalqalah { color: #0070ff; }
 
-/* Translation */
+/* TRANSLATION */
 .translation {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15px;
-  line-height: 1.5;
-  margin-top: 6px;
+  line-height: 1.35;
   color: var(--sub);
+  margin-bottom: 4px;
 }
 
-/* Bottom */
+/* FOOTER */
 .bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 6px;
   font-size: 12px;
   color: var(--sub);
 }
@@ -119,6 +122,7 @@ html, body {
     <div id="ref"></div>
     <div class="copy-btn" onclick="copyText()">Copy</div>
   </div>
+
 </div>
 
 <script>
@@ -150,16 +154,16 @@ ${translationAll}
   );
 }
 
-/* Very simple tajweed coloring (basic demo rules) */
+/* Simple tajweed coloring (demo rules) */
 function applyTajweed(text) {
   return text
     .replace(/مّ|نّ/g, '<span class="ghunna">$&</span>')
-    .replace(/ق|ط|ب|ج|د/g, '<span class="qalqalah">$&</span>')
+    .replace(/[قطبجد]/g, '<span class="qalqalah">$&</span>')
     .replace(/ا{2,}|و{2,}|ي{2,}/g, '<span class="madd">$&</span>');
 }
 
 if (!surah || !ayahParam) {
-  document.getElementById("arabic").innerText = "Missing parameters";
+  document.getElementById("arabic").innerText = "Missing surah or ayah";
 } else {
 
   let ayahs = [];
@@ -176,10 +180,10 @@ if (!surah || !ayahParam) {
     fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${a}`)
       .then(r => r.json())
       .then(d => {
-        const arabic = applyTajweed(d.data.text);
+        const colored = applyTajweed(d.data.text);
         arabicAll += `${d.data.text} ۝${toArabicNumber(String(a))}\n\n`;
         document.getElementById("arabic").innerHTML +=
-          `${arabic} <span>۝${toArabicNumber(String(a))}</span><br><br>`;
+          `${colored} ۝${toArabicNumber(String(a))}<br>`;
       });
 
     fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${a}/en.sahih`)
@@ -187,7 +191,7 @@ if (!surah || !ayahParam) {
       .then(d => {
         translationAll += d.data.text + "\n\n";
         document.getElementById("translation").innerText +=
-          d.data.text + "\n\n";
+          d.data.text + "\n";
       });
   });
 
