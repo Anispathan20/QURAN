@@ -17,13 +17,12 @@
   --border: #ddd;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1115;
-    --text: #ffffff;
-    --sub: #cccccc;
-    --border: #333;
-  }
+/* Manual dark mode */
+body.dark {
+  --bg: #0f1115;
+  --text: #ffffff;
+  --sub: #cccccc;
+  --border: #333;
 }
 
 /* RESET */
@@ -103,6 +102,7 @@ html, body {
 <div class="container">
 
   <div class="controls">
+    <button onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
     <button onclick="showMode('both')">Both</button>
     <button onclick="showMode('arabic')">Arabic</button>
     <button onclick="showMode('translation')">English</button>
@@ -147,7 +147,24 @@ ${translationAll}
   );
 }
 
-/* Tajweed function kept, but neutralized */
+/* Manual theme toggle */
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+
+  const btn = document.getElementById("themeBtn");
+  const isDark = document.body.classList.contains("dark");
+
+  btn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+
+/* Load saved theme */
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+  document.getElementById("themeBtn").textContent = "☀️ Light";
+}
+
+/* Tajweed function preserved but neutral */
 function applyTajweed(text) {
   return text;
 }
