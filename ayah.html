@@ -6,8 +6,8 @@
 
 <title>Quran Ayah</title>
 
-<!-- Quran Font -->
-<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+<!-- Clean Quran Font -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -42,7 +42,6 @@ html, body {
 /* CONTAINER */
 .container {
   padding: 10px 12px;
-  display: block;
 }
 
 /* TOGGLES */
@@ -64,18 +63,13 @@ html, body {
 
 /* ARABIC */
 .arabic {
-  font-family: 'Amiri', serif;
+  font-family: 'Amiri Quran', serif;
   font-size: 30px;
-  line-height: 1.7;
+  line-height: 1.8;
   direction: rtl;
   text-align: right;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
-
-/* TAJWEED COLORS (basic) */
-.madd { color: #00a000; }
-.ghunna { color: #c000c0; }
-.qalqalah { color: #0070ff; }
 
 /* TRANSLATION */
 .translation {
@@ -83,7 +77,7 @@ html, body {
   font-size: 15px;
   line-height: 1.35;
   color: var(--sub);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 /* FOOTER */
@@ -108,7 +102,6 @@ html, body {
 
 <div class="container">
 
-  <!-- Toggle buttons -->
   <div class="controls">
     <button onclick="showMode('both')">Both</button>
     <button onclick="showMode('arabic')">Arabic</button>
@@ -154,12 +147,9 @@ ${translationAll}
   );
 }
 
-/* Simple tajweed coloring (demo rules) */
+/* Tajweed function kept, but neutralized */
 function applyTajweed(text) {
-  return text
-    .replace(/مّ|نّ/g, '<span class="ghunna">$&</span>')
-    .replace(/[قطبجد]/g, '<span class="qalqalah">$&</span>')
-    .replace(/ا{2,}|و{2,}|ي{2,}/g, '<span class="madd">$&</span>');
+  return text;
 }
 
 if (!surah || !ayahParam) {
@@ -180,10 +170,9 @@ if (!surah || !ayahParam) {
     fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${a}`)
       .then(r => r.json())
       .then(d => {
-        const colored = applyTajweed(d.data.text);
         arabicAll += `${d.data.text} ۝${toArabicNumber(String(a))}\n\n`;
         document.getElementById("arabic").innerHTML +=
-          `${colored} ۝${toArabicNumber(String(a))}<br>`;
+          `${d.data.text} ۝${toArabicNumber(String(a))}<br>`;
       });
 
     fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${a}/en.sahih`)
